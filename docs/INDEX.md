@@ -13,3 +13,4 @@
 - `FINAL_Q1_FLOW.md` — frozen end-to-end reviewer-oriented scientific flow
 - `DEPLOYMENT_NOTE.md` — source/deployment verification boundary
 - `READY_FOR_REVIEW.md` — source-package verification scope
+- `SOURCE_REVISION.md` — consolidated source-revision note
