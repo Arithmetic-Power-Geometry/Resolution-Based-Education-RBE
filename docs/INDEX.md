@@ -9,3 +9,4 @@
 - `FOUNDATION.md` — foundation paper and DOI linkage
 - `CLAIM_BOUNDARY.md` — explicit limits on software/mechanism evidence
 - `Q1_PACKAGE_STATUS.md` — scope of the reviewer-oriented repository redesign
+- `VERSION.md` — reviewer-flow software presentation version
