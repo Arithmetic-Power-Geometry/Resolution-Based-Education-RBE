@@ -33,9 +33,13 @@ class Probe:
     resolution_gain: float = 0.0
     privacy_ok: bool = True
     construct_relevant: bool = True
+    learner_time: float = 0.0
+    assessor_effort: float = 0.0
+    resource_cost: float = 0.0
+    fairness_burden: float = 0.0
 
     def burden(self, leakage_weight: float = 1.0) -> float:
-        return self.cost + leakage_weight * self.leakage
+        return float(self.cost) + leakage_weight * float(self.leakage)
 
 @dataclass
 class StudentRecord:
@@ -46,3 +50,5 @@ class StudentRecord:
     decision_risk: Optional[float] = None
     burden: float = 0.0
     state: Optional[str] = None
+    resolution_mode: str = "deterministic"
+    resolved: Optional[bool] = None
