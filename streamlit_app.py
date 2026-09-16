@@ -21,13 +21,13 @@ def defaults():
 def rco():
     s=st.session_state
     return RCO(s.rco_id,s.capability,[x.strip() for x in s.envs.split(',') if x.strip()],[x.strip() for x in s.perts.split(',') if x.strip()],s.positive,float(s.threshold),float(s.epsilon),float(s.bmax))
-def nav():
+def nav(position):
     a,b,c=st.columns([1,5,1])
     with a:
-        if st.session_state.step>1 and st.button("← Previous",use_container_width=True): st.session_state.step-=1; st.rerun()
+        if st.session_state.step>1 and st.button("← Previous",use_container_width=True,key=f"prev_{position}"): st.session_state.step-=1; st.rerun()
     with b: st.progress(st.session_state.step/len(STEPS),text=f"Step {st.session_state.step}/{len(STEPS)} · {STEPS[st.session_state.step-1]}")
     with c:
-        if st.session_state.step<len(STEPS) and st.button("Next →",type="primary",use_container_width=True): st.session_state.step+=1; st.rerun()
+        if st.session_state.step<len(STEPS) and st.button("Next →",type="primary",use_container_width=True,key=f"next_{position}"): st.session_state.step+=1; st.rerun()
 def helpx(t,x):
     with st.expander("Help · "+t): st.write(x)
 def ensure_rows():
@@ -67,7 +67,7 @@ with st.sidebar:
         if st.button(f"{p} {i}. {name}",use_container_width=True,key=f"n{i}"): s.step=i; st.rerun()
     st.divider(); st.caption("Copyright (C) 2026 Mohammad Amir Khusru Akhtar"); st.caption("Apache License 2.0")
 st.markdown('<div class="hero"><h1>Resolution-Based Education (RBE) Laboratory</h1><p>Preserve the existing OBE evidence chain, then test whether the evidence actually resolves the capability decision.</p></div>',unsafe_allow_html=True)
-nav(); step=s.step
+nav("top"); step=s.step
 
 if step==1:
     st.header("1 · Start with the existing OBE evidence")
@@ -163,4 +163,4 @@ elif step==12:
     with a: st.download_button("Download complete RBE result JSON",json.dumps(pkg,indent=2,default=str),"rbe_complete_result.json","application/json",use_container_width=True)
     with b: st.download_button("Download evaluated learner CSV",pd.DataFrame(pkg["student_records"]).to_csv(index=False),"rbe_evaluated_learners.csv","text/csv",use_container_width=True)
     st.info("Research validation remains separate from software correctness. Before high-stakes adoption, use shadow mode, calibration, fairness/reliability studies and controlled comparison against strong OBE/evidence-rich baselines.")
-st.divider(); nav(); st.caption("Resolution-Based Education (RBE) · Copyright (C) 2026 Mohammad Amir Khusru Akhtar · Apache License 2.0")
+st.divider(); nav("bottom"); st.caption("Resolution-Based Education (RBE) · Copyright (C) 2026 Mohammad Amir Khusru Akhtar · Apache License 2.0")
