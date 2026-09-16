@@ -150,6 +150,7 @@ Strong educational comparisons should report certification error/risk, coverage,
 - `docs/SCIENTIFIC_WORKFLOW.md` — decision flow and stop/failure rules.
 - `docs/VALIDATION_LAYERS.md` — software vs reproduction vs educational evidence.
 - `docs/REVIEWER_CHECKLIST.md` — compact reproducibility/claim-control checklist.
+- `docs/README_Q1_REVIEW_PATH.md` — shortest Q1-review path.
 - `tests/test_scientific_invariants.py` — executable internal scientific relationships.
 
 ## Theoretical foundation
