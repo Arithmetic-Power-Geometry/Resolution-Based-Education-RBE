@@ -4,38 +4,38 @@ from .models import StudentRecord
 def course_metrics(records: Iterable[StudentRecord]) -> Dict[str, float]:
     rows = list(records)
     n = len(rows)
-    if n == 0:
-        return {k: 0.0 for k in ["PAR","RR","RAR","UAR","RNR","MRB"]}
-    perf = sum(r.state in {"AR","AU","RN","Deferred"} for r in rows)
-    resolved = sum(r.state in {"AR","RN","NA"} and r.decision_risk is not None for r in rows)
+    if not n:
+        return {k: 0.0 for k in ["PAR", "RR", "RAR", "UAR", "RNR", "MRB", "DeferredRate"]}
+    perf = sum(r.state in {"AR", "AU", "RN", "Deferred"} for r in rows)
+    resolved = sum(r.state in {"AR", "RN"} or (r.state == "NA" and r.resolved is True) for r in rows)
     ar = sum(r.state == "AR" for r in rows)
-    au = sum(r.state in {"AU","Deferred"} for r in rows)
     rn = sum(r.state == "RN" for r in rows)
+    unresolved_attained = sum(r.state in {"AU", "Deferred"} for r in rows)
+    deferred = sum(r.state == "Deferred" for r in rows)
     return {
         "PAR": 100.0 * perf / n,
         "RR": 100.0 * resolved / n,
         "RAR": 100.0 * ar / n,
-        "UAR": 100.0 * au / n,
+        "UAR": 100.0 * unresolved_attained / n,
         "RNR": 100.0 * rn / n,
-        "MRB": sum(r.burden for r in rows) / n,
+        "MRB": sum(float(r.burden) for r in rows) / n,
+        "DeferredRate": 100.0 * deferred / n,
     }
 
 def programme_metrics(course_rows: Iterable[dict], mapping: Dict[str, Dict[str, float]]) -> Dict[str, dict]:
-    course_rows = list(course_rows)
-    by_rco = {r["rco_id"]: r for r in course_rows}
+    rows = list(course_rows)
+    by_rco = {r["rco_id"]: r for r in rows}
     result = {}
     pos = sorted({po for m in mapping.values() for po in m})
     for po in pos:
-        weighted = {"PPO":0.0,"RPO":0.0,"UPO":0.0}
-        denom = 0.0
-        for rco_id, po_map in mapping.items():
-            w = po_map.get(po,0.0)
-            if w <= 0 or rco_id not in by_rco:
-                continue
-            denom += w
-            row = by_rco[rco_id]
-            weighted["PPO"] += w * row["PAR"]
-            weighted["RPO"] += w * row["RAR"]
-            weighted["UPO"] += w * row["UAR"]
-        result[po] = {k:(v/denom if denom else 0.0) for k,v in weighted.items()}
+        active = [(r, float(mapping[r].get(po, 0) or 0)) for r in mapping if r in by_rco and float(mapping[r].get(po, 0) or 0) > 0]
+        denom = sum(w for _, w in active)
+        if denom <= 0:
+            result[po] = {"PPO": None, "RPO": None, "UPO": None}
+            continue
+        result[po] = {
+            "PPO": sum(w * float(by_rco[r]["PAR"]) for r, w in active) / denom,
+            "RPO": sum(w * float(by_rco[r]["RAR"]) for r, w in active) / denom,
+            "UPO": sum(w * float(by_rco[r]["UAR"]) for r, w in active) / denom,
+        }
     return result
