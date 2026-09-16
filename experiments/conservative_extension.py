@@ -5,7 +5,11 @@ This is a mechanism test, not an educational-effectiveness experiment.
 from rbe.models import RCO, StudentRecord
 
 rco = RCO("R1", "capability", ["exam"], ["transfer"], "certify", 60.0, 0.10, 3.0)
-case = StudentRecord("A", rco.rco_id, 82.0, "certify", None, 0.0, "AR", "deterministic", True)
+case = StudentRecord(
+    student_id="A", rco_id=rco.rco_id, score=82.0,
+    resolved_decision="certify", decision_risk=None, burden=0.0,
+    state="AR", mode="deterministic", resolved=True,
+)
 
 print("RBE conservative-extension mechanism")
 print(f"performance_score={case.score}")
