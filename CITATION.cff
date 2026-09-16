@@ -1,10 +1,22 @@
 cff-version: 1.2.0
-message: "If you use this software, please cite it."
-title: "Resolution-Based Education (RBE): Reference Software"
+message: "If you use the RBE theory or this reference implementation, please cite the RBE foundation and this software record as appropriate."
+title: "Resolution-Based Education (RBE): Reference Software and Reproducibility Implementation"
 type: software
 authors:
-  - family-names: "Akhtar"
-    given-names: "Mohammad Amir Khusru"
+  - family-names: Akhtar
+    given-names: Mohammad Amir Khusru
+    affiliation: Usha Martin University
+    country: India
 year: 2026
+version: "1.1.0"
 license: Apache-2.0
 repository-code: "https://github.com/Arithmetic-Power-Geometry/Resolution-Based-Education-RBE"
+url: "https://resolution-based-education.streamlit.app"
+references:
+  - type: article
+    title: "Beyond Outcome Attainment: Resolution-Based Education and the Certification–Assessment Resolution Gap in the Generative-AI Era"
+    authors:
+      - family-names: Akhtar
+        given-names: Mohammad Amir Khusru
+    year: 2026
+    doi: "10.5281/zenodo.22797079"
