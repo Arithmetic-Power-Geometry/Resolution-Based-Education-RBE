@@ -114,23 +114,42 @@ Operational states remain explicit: `AR`, `AU`, `RN`, `NA`, `Deferred`. Course r
 PAR = RAR + UAR + RNR
 ```
 
-## Reproducibility
+## Reproduce the mechanisms
 
 ```bash
 python -m pip install -r requirements.txt
 python -m pytest -q
+python experiments/reviewer_demo.py
+python experiments/conservative_extension.py
+python experiments/resolution_stagnation.py
 python examples/run_theory_of_computation.py
 python scripts/generate_artifacts.py
 streamlit run streamlit_app.py
 ```
 
-GitHub Actions executes the tests and artifact generation on pushes and pull requests. Software correctness and calculation reproduction are intentionally distinguished from empirical educational validation.
+`experiments/reviewer_demo.py` reproduces the equal-score/different-resolution demonstration. `experiments/conservative_extension.py` verifies the zero-added-burden constructed case. `experiments/resolution_stagnation.py` demonstrates why repeating a non-discriminating observation need not resolve a decision distinction. These are mechanism demonstrations, not claims of educational effectiveness.
 
-## Validation boundary
+GitHub Actions executes the repository test suite and artifact generation on pushes and pull requests.
 
-The repository can establish that the formal rules are implemented consistently and that declared workbook calculations/examples are reproducible. It cannot by itself establish educational superiority. High-stakes adoption requires prospective construct review, calibration, controlled comparison, reliability and fairness analysis, and external review. Strong comparisons should report certification error/risk, coverage, burden, transfer, error detection, constraint adaptation, misleading-AI resistance, inter-rater reliability and subgroup effects.
+## Validation layers
 
-If RBE does not improve the relevant risk–coverage–burden frontier against strong comparators, superiority is not demonstrated.
+The project deliberately separates:
+
+1. **Software validation** — implementation and scientific-invariant tests.
+2. **Calculation/reproduction validation** — workbook and declared example reproduction.
+3. **Educational validation** — prospective comparison against strong alternatives.
+
+The first two do not establish the third. See `docs/VALIDATION_LAYERS.md`.
+
+Strong educational comparisons should report certification error/risk, coverage, burden, transfer, error detection, constraint adaptation, misleading-AI resistance, inter-rater reliability and subgroup effects. If RBE does not improve the relevant risk–coverage–burden frontier against strong comparators, superiority is not demonstrated.
+
+## Reviewer navigation
+
+- `docs/REVIEWER_GUIDE.md` — five-minute scientific reading path.
+- `docs/NOVELTY_MAP.md` — explicit novelty/prior-concept boundary.
+- `docs/SCIENTIFIC_WORKFLOW.md` — decision flow and stop/failure rules.
+- `docs/VALIDATION_LAYERS.md` — software vs reproduction vs educational evidence.
+- `tests/test_scientific_invariants.py` — executable internal scientific relationships.
 
 ## Theoretical foundation
 
