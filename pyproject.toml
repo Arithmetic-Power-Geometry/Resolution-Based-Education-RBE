@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "resolution-based-education-rbe"
+version = "0.1.0"
+description = "Reference software for Resolution-Based Education (RBE)"
+authors = [{name = "Mohammad Amir Khusru Akhtar"}]
+license = {text = "Apache-2.0"}
+requires-python = ">=3.10"
+dependencies = []
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
