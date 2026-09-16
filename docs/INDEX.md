@@ -7,4 +7,5 @@
 - `REVIEWER_CHECKLIST.md` — reproducibility and claim-control checklist
 - `README_Q1_REVIEW_PATH.md` — compact Q1-review path
 - `FOUNDATION.md` — foundation paper and DOI linkage
+- `CLAIM_BOUNDARY.md` — explicit limits on software/mechanism evidence
 - `Q1_PACKAGE_STATUS.md` — scope of the reviewer-oriented repository redesign
