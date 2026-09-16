@@ -11,7 +11,7 @@ from rbe.validation import validate_rco
 
 st.set_page_config(page_title="RBE Laboratory", page_icon="🎓", layout="wide", initial_sidebar_state="expanded")
 st.markdown("""<style>
-.block-container{max-width:1500px;padding-top:1rem}.hero{padding:1.45rem 1.65rem;border:1px solid rgba(128,128,128,.25);border-radius:22px;background:linear-gradient(120deg,rgba(66,99,235,.16),rgba(0,190,150,.10));margin-bottom:1rem}.hero h1{margin:0}.novel{padding:1rem 1.2rem;border-left:5px solid #6c63ff;background:rgba(108,99,255,.08);border-radius:8px;margin:.7rem 0}.smallflow{font-size:.94rem;line-height:1.55}
+.block-container{max-width:1500px;padding-top:1rem}.hero{padding:1.45rem 1.65rem;border:1px solid rgba(128,128,128,.25);border-radius:22px;background:linear-gradient(120deg,rgba(66,99,235,.16),rgba(0,190,150,.10));margin-bottom:1rem}.hero h1{margin:0}.novel{padding:1rem 1.2rem;border-left:5px solid #6c63ff;background:rgba(108,99,255,.08);border-radius:8px;margin:.7rem 0}
 </style>""", unsafe_allow_html=True)
 STEPS=["Start / OBE Import","Programme & Course","CO → RCO Design","Performance Evidence","Resolution Gate","CARG & MRRP","RBE Attainment","PO/PSO Comparison","Capability Passport","Resolution Ledger","Audit & Improvement","Validation / Export"]
 GROUPS={1:"I · EXISTING EDUCATION SYSTEM",5:"II · RBE RESOLUTION LAYER",10:"III · EVIDENCE, REPORTING & IMPROVEMENT"}
@@ -107,8 +107,9 @@ if step==1:
 elif step==2:
     st.header("2 · Programme and course context"); a,b=st.columns(2)
     if s.obe: s.programme=f"{s.obe['metadata'].get('class','')} - {s.obe['metadata'].get('branch','')}"; s.course=str(s.obe['metadata'].get('course') or s.course)
-    with a: s.programme=st.text_input("Programme",s.programme,key="programme_input")
-    with b: s.course=st.text_input("Course",s.course,key="course_input")
+    with a: programme_value=st.text_input("Programme",s.programme,key="programme_input")
+    with b: course_value=st.text_input("Course",s.course,key="course_input")
+    s.programme=programme_value; s.course=course_value
     st.text_area("Purpose / stakeholder / accreditation context",placeholder="Record the approved context. RBE does not change statutory rules by itself.",key="context_input")
     helpx("Governance","For real adoption, record the competent body, approved thresholds, appeals, accessibility, privacy, retention and award authority.")
 elif step==3:
@@ -116,10 +117,11 @@ elif step==3:
     if s.obe:
         coid=st.selectbox("Existing CO",list(s.obe["co_descriptions"]),key="co_select"); base=s.obe["co_descriptions"].get(coid) or ""
         if st.button("Use this CO as starting capability",key="use_co"): s.rco_id=coid+"-RCO"; s.capability=base; st.rerun()
-    s.rco_id=st.text_input("RCO ID",s.rco_id,key="rco_id_input"); s.capability=st.text_area("C · Capability claim",s.capability,key="capability_input"); a,b=st.columns(2)
-    with a: s.envs=st.text_area("E · Relevant environments",s.envs,key="env_input")
-    with b: s.perts=st.text_area("P · Admissible perturbations",s.perts,key="pert_input")
-    s.positive=st.text_input("D · Positive certification decision",s.positive,key="decision_input")
+    rco_id_value=st.text_input("RCO ID",s.rco_id,key="rco_id_input"); capability_value=st.text_area("C · Capability claim",s.capability,key="capability_input"); a,b=st.columns(2)
+    with a: env_value=st.text_area("E · Relevant environments",s.envs,key="env_input")
+    with b: pert_value=st.text_area("P · Admissible perturbations",s.perts,key="pert_input")
+    decision_value=st.text_input("D · Positive certification decision",s.positive,key="decision_input")
+    s.rco_id=rco_id_value; s.capability=capability_value; s.envs=env_value; s.perts=pert_value; s.positive=decision_value
     issues=validate_rco(rco())
     if issues:
         for x in issues: st.error(x)
@@ -127,13 +129,14 @@ elif step==3:
     helpx("RCO=(C,E,P,D)","A conventional CO is retained. RBE adds environments, admissible perturbations/evidence conditions and the certification distinction that the evidence must support.")
 elif step==4:
     st.header("4 · Performance evidence remains performance evidence"); ensure_rows(); a,b,c=st.columns(3)
-    with a: s.threshold=st.number_input("Performance threshold T",0.,100.,float(s.threshold),1.,key="threshold_input")
-    with b: s.bmax=st.number_input("Maximum additional burden Bmax",0.,20.,float(s.bmax),.5,key="bmax_input")
-    with c: s.mode=st.selectbox("Resolution mode",["Deterministic","Probabilistic"],index=0 if s.mode=="Deterministic" else 1,key="mode_input")
+    with a: threshold_value=st.number_input("Performance threshold T",0.,100.,float(s.threshold),1.,key="threshold_input")
+    with b: bmax_value=st.number_input("Maximum additional burden Bmax",0.,20.,float(s.bmax),.5,key="bmax_input")
+    with c: mode_value=st.selectbox("Resolution mode",["Deterministic","Probabilistic"],index=0 if s.mode=="Deterministic" else 1,key="mode_input")
+    s.threshold=threshold_value; s.bmax=bmax_value; s.mode=mode_value
     cols={"resolved":st.column_config.SelectboxColumn("Resolution",options=["Resolved","Unresolved"]),"decision":st.column_config.SelectboxColumn("Decision",options=["certify","not","unresolved"]),"score":st.column_config.NumberColumn("Performance score",min_value=0.,max_value=100.)}
-    if s.mode=="Probabilistic": s.epsilon=st.number_input("Probabilistic risk threshold ε",0.,1.,float(s.epsilon),.01,key="epsilon_input"); cols["risk"]=st.column_config.NumberColumn("Decision risk",min_value=0.,max_value=1.)
+    if s.mode=="Probabilistic": epsilon_value=st.number_input("Probabilistic risk threshold ε",0.,1.,float(s.epsilon),.01,key="epsilon_input"); s.epsilon=epsilon_value; cols["risk"]=st.column_config.NumberColumn("Decision risk",min_value=0.,max_value=1.)
     else: st.caption("Deterministic mode is the theoretical core; no invented probability value is required.")
-    s.rbe_rows=st.data_editor(s.rbe_rows,num_rows="dynamic",use_container_width=True,column_config=cols,key="evidence_editor")
+    edited_evidence=st.data_editor(s.rbe_rows,num_rows="dynamic",use_container_width=True,column_config=cols,key="evidence_editor"); s.rbe_rows=edited_evidence
     novelty("This is the boundary between conventional performance reporting and the RBE question. Crossing T does not by itself establish that the evidence resolves the capability-bearing certification decision.")
 elif step==5:
     st.header("5 · Resolution Gate — the central RBE decision")
