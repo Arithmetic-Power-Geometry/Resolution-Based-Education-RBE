@@ -149,6 +149,7 @@ Strong educational comparisons should report certification error/risk, coverage,
 - `docs/NOVELTY_MAP.md` — explicit novelty/prior-concept boundary.
 - `docs/SCIENTIFIC_WORKFLOW.md` — decision flow and stop/failure rules.
 - `docs/VALIDATION_LAYERS.md` — software vs reproduction vs educational evidence.
+- `docs/REVIEWER_CHECKLIST.md` — compact reproducibility/claim-control checklist.
 - `tests/test_scientific_invariants.py` — executable internal scientific relationships.
 
 ## Theoretical foundation
