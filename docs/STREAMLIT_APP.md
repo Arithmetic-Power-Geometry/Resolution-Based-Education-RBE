@@ -1,33 +1,36 @@
-# Interactive RBE Lab
+# Interactive RBE Laboratory
 
-The Streamlit application provides an 11-step guided workflow:
-
-1. Programme Context
-2. RCO Design
-3. Assessment Evidence
-4. Resolution Gate
-5. MRRP / Adaptive Probe
-6. Course Attainment
-7. Programme Mapping
-8. Capability Passport
-9. Resolution Ledger
-10. Audit & Continuous Improvement
-11. Export / Test Report
-
-## Run
+Run:
 
 ```bash
 python -m pip install -r requirements.txt
 streamlit run streamlit_app.py
 ```
 
-The interface starts with a Theory of Computation demonstration dataset. Users can edit learner evidence, thresholds, resolution parameters, probe candidates and programme mappings. Every stage contains contextual help, and the sidebar allows direct navigation through the full RBE workflow.
+The application is a guided OBE-to-RBE workflow rather than a stand-alone score calculator.
 
-The application can export a Capability Passport, Resolution Ledger, evaluated learner table and complete RBE result package.
+1. Start / OBE Import
+2. Programme & Course
+3. CO → RCO Design
+4. Performance Evidence
+5. Resolution Gate
+6. CARG & MRRP
+7. RBE Attainment
+8. PO/PSO Comparison
+9. Capability Passport
+10. Resolution Ledger
+11. Audit & Improvement
+12. Validation / Export
 
-## Implementation boundary
+The importer supports the Theory of Computation workbook structure (`FLAT`, `Matrix`, `CO Calculation`, `PO Calculation`). Existing CO and PO/PSO calculations are recomputed before the RBE layer is applied. The `Matrix` sheet is treated as the canonical CO→PO/PSO mapping because the supplied workbook contains inconsistent references in part of its `PO Calculation` sheet.
 
-The application is a research/reference implementation. High-stakes institutional use requires local validation of thresholds, decision models, perturbations, fairness, accessibility, reliability, privacy, due process and governance.
+Deterministic RBE is the default mode and requires no manually invented probability. Probabilistic RBE is available as an explicit advanced mode. The app keeps performance score and resolution status separate and exposes AR, AU, RN, NA, Deferred, PAR, RR, RAR, UAR, RNR, MRB and defer rate.
+
+The MRRP page deliberately labels its immediate recommendation as a **one-step discriminating probe**. A full MRRP is a probe or adaptive policy whose terminal evidence reaches the declared resolution condition.
+
+Exports include the complete RBE result package, evaluated learner table, Capability Passport and Resolution Ledger.
+
+For consequential institutional use, locally validate decision standards, thresholds, perturbations, reliability, fairness, accessibility, privacy, security, appeals and governance. Software operation does not by itself establish empirical superiority.
 
 Copyright (C) 2026 Mohammad Amir Khusru Akhtar
 
