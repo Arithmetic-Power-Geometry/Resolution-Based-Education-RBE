@@ -1,31 +1,104 @@
 # Resolution-Based Education (RBE)
 
-A reference software and reproducibility implementation of **Resolution-Based Education (RBE)** for curriculum, learning, assessment, certification resolution, attainment, programme evaluation and continuous improvement.
+> **Performance attainment is not necessarily certification resolution.**
 
-> **Education must distinguish performance measurement from certification resolution.**
+RBE is a decision-relative extension of outcome-based education. It preserves existing marks, grades, CO/PO/PSO mappings and continuous-improvement evidence, then asks a separate question before a capability-bearing certification claim is made:
 
-RBE preserves existing outcomes, marks, grades, credits, CO/PO/PSO mappings and continuous-improvement practice. It adds a decision-relative certification layer: before a capability-bearing claim is made, the available evidence should resolve the distinctions that the claim requires.
+**Does the available evidence resolve every distinction required by the certification decision?**
 
-## Final software workflow
+## Scientific flow
 
-The Streamlit laboratory implements a guided 12-stage workflow:
+```text
+Existing OBE evidence
+        ↓
+Performance result
+        ↓
+RBE Resolution Gate
+        ↓
+   ┌────┴────┐
+ adequate   inadequate
+   ↓          ↓
+ STOP        CARG
+ zero         ↓
+ added       MRRP / adaptive resolving evidence
+ burden       ↓
+         re-evaluate resolution
+              ↓
+        AR / AU / RN / Deferred
+              ↓
+ PAR / RR / RAR / UAR / RNR / MRB
+              ↓
+ Programme evidence → Passport → Ledger → Audit → Improvement
+```
 
-`OBE workbook → programme/course → CO→RCO → performance evidence → Resolution Gate → CARG/MRRP → RBE attainment → PO/PSO comparison → Capability Passport → Resolution Ledger → audit/improvement → validation/export`
+The formal adequacy condition is
 
-The app can directly import the supplied Theory of Computation workbook structure with the sheets `FLAT`, `Matrix`, `CO Calculation` and `PO Calculation`. It recomputes the existing OBE baseline before adding RBE. This is deliberate: **RBE extends OBE; it does not erase it.**
+```math
+w_i \sim_A w_j \Rightarrow g(w_i)=g(w_j).
+```
 
-## Core RBE objects
+In words: all learner possibilities that remain observationally indistinguishable under the available assessment evidence must require the same certification decision. If this already holds, RBE stops and adds no assessment. If it fails, a Certification–Assessment Resolution Gap (CARG) is present and additional evidence must be decision-targeted rather than automatically larger in volume.
 
-- Resolvable Capability Outcome: `RCO=(C,E,P,D)`
-- Outcome–Resolution Separation: `Outcome Attainment ⇏ Certification Resolution`
-- Deterministic resolution: all still-compatible learner worlds imply the same required decision
-- Probabilistic extension: `r_t = 1 - max_d P(D=d | K_t)`
-- CARG: certification-incompatible worlds remain observationally indistinguishable under the current protocol
-- Resolution Gate: stop immediately when current evidence is already adequate
-- Adaptive evidence: select admissible discriminating evidence under burden, accessibility, reliability, fairness, leakage, privacy and construct constraints
-- Finite stopping: unresolved cases may be explicitly Deferred rather than forced into a claim
+## 3-minute reviewer demo
 
-## Attainment
+The Streamlit app contains a **Reviewer Demo** that exposes the central mechanism without requiring a workbook. Five learners deliberately show why a mark and a certification-resolution state are different objects.
+
+| Learner | Score | Conventional performance | Resolution status | RBE state | Action |
+|---|---:|---|---|---|---|
+| A | 82 | Attained | resolved-positive | AR | stop; zero added burden |
+| B | 82 | Attained | unresolved | AU | seek discriminating evidence |
+| C | 82 | Attained | resolved-negative | RN | do not certify the capability |
+| D | 55 | Not attained | — | NA | development / ordinary course process |
+| E | 82 | Attained | unresolved at burden boundary | Deferred | do not manufacture certainty |
+
+**The same performance score can therefore coexist with different certification-resolution states.** RBE does not change the original mark to express this distinction.
+
+## What RBE adds—and what it does not claim to invent
+
+| Established approach / object | Established role | RBE-specific use |
+|---|---|---|
+| Outcome-based education | outcomes, mapping and attainment | supplies the initial evidence state K0 |
+| Authentic assessment | realistic performance | candidate evidence source |
+| Oral defence / verification | targeted verification | candidate probe, not RBE itself |
+| Adaptive testing | sequential evidence acquisition | methodological ancestor |
+| Programmatic assessment | longitudinal, multiple evidence | strong comparator |
+| Resolution Gate | — | tests decision-relative evidence adequacy |
+| CARG | — | identifies a mismatch between assessment-equivalence and required certification decisions |
+| MRRP | — | least-burden complete resolution-restoring probe or adaptive policy under declared constraints |
+| AR/AU/RN/Deferred | — | keeps certification-resolution status separate from marks |
+
+RBE does **not** claim invention of authentic assessment, oral defence, programmatic assessment, adaptive testing, Bayesian updating, equivalence relations, information gain, abstention or Pareto frontiers.
+
+## Theory → software traceability
+
+| Scientific object | Meaning | Reference implementation |
+|---|---|---|
+| `W` | certification-relevant learner possibilities | `rbe/models.py` |
+| `A` | assessment protocol / evidence language | `rbe/resolution.py` |
+| `w_i ~_A w_j` | assessment equivalence | `rbe/resolution.py` |
+| `g(w)` | required certification decision | `rbe/models.py` |
+| CARG | decision-incompatible worlds remain indistinguishable | `rbe/resolution.py` |
+| `RCO=(C,E,P,D)` | resolvable capability outcome | `rbe/models.py` |
+| Resolution Gate | stop or seek additional evidence | `rbe/resolution.py`, `rbe/engine.py` |
+| MRRP | burden-constrained resolving evidence policy | `rbe/mrrp.py` |
+| `Q+`, RCA | positive resolved attainment | `rbe/attainment.py` |
+| PAR/RR/RAR/UAR/RNR/MRB | course reporting | `rbe/attainment.py` |
+| audit | continuous-improvement checks | `rbe/audit.py` |
+| OBE import | conservative-extension baseline | `rbe/workbook.py`, `rbe/obe.py` |
+
+## Full operational workflow
+
+The app retains the complete educational lifecycle but groups it into three scientific layers:
+
+**I · Existing Education System** — OBE import → programme/course → CO/PO baseline → performance evidence.
+
+**II · RBE Resolution Layer** — CO→RCO → Resolution Gate → CARG → MRRP/adaptive evidence → certification state.
+
+**III · Evidence, Reporting & Improvement** — course/programme metrics → Capability Passport → Resolution Ledger → audit → validation/export.
+
+This organization is deliberate: **RBE is a resolution layer over an existing evidence architecture, not a replacement attainment calculator.**
+
+## Core attainment mathematics
 
 For learner `i` and RCO `j`:
 
@@ -35,58 +108,45 @@ Q+_ij  = 1[resolution criterion met AND resolved decision = positive decision]
 RCA_ij = A_ij * Q+_ij
 ```
 
-Operational states remain visible: `AR`, `AU`, `RN`, `NA`, `Deferred`.
-
-Course reporting includes `PAR`, `RR`, `RAR`, `UAR`, `RNR`, `MRB` and Deferred rate. When performance-attained cases are exhaustively partitioned into resolved-positive, unresolved and resolved-negative:
+Operational states remain explicit: `AR`, `AU`, `RN`, `NA`, `Deferred`. Course reporting includes `PAR`, `RR`, `RAR`, `UAR`, `RNR`, `MRB` and Deferred rate. When performance-attained cases are exhaustively partitioned into resolved-positive, unresolved and resolved-negative states:
 
 ```text
 PAR = RAR + UAR + RNR
 ```
 
-Programme-level RBE reporting uses mapped `PPO`, `RPO` and `UPO`, while preserving the underlying evidence and avoiding false precision from mapping weights.
-
-## Existing OBE workbook validation
-
-The importer reproduces the supplied Theory of Computation workbook's rounded CO results:
-
-| CO | Mean normalized score | Mean attainment (0–3) |
-|---|---:|---:|
-| CO1 | 0.48 | 1.75 |
-| CO2 | 0.52 | 2.10 |
-| CO3 | 0.45 | 1.46 |
-| CO4 | 0.57 | 2.15 |
-
-The software also detects two issues in the supplied workbook rather than propagating them silently: a cached `#DIV/0!` for a zero-mapped PO and a mismatch between the `PO Calculation` mapping and the canonical `Matrix` sheet. The importer uses `Matrix` as the mapping source and returns `N/A` for zero denominators.
-
-## Run the interactive app
+## Reproducibility
 
 ```bash
 python -m pip install -r requirements.txt
-streamlit run streamlit_app.py
-```
-
-## Test and generate reproducibility artifacts
-
-```bash
 python -m pytest -q
 python examples/run_theory_of_computation.py
 python scripts/generate_artifacts.py
+streamlit run streamlit_app.py
 ```
 
-GitHub Actions repeats the tests and artifact generation on pushes and pull requests.
+GitHub Actions executes the tests and artifact generation on pushes and pull requests. Software correctness and calculation reproduction are intentionally distinguished from empirical educational validation.
 
-## Research-use boundary
+## Validation boundary
 
-Software correctness is not empirical validation of RBE. High-stakes adoption should proceed through content/construct review, shadow mode, low-stakes calibration, controlled comparison, limited certification pilot and external review. Comparative work should include strong OBE/evidence-rich baselines and measure transfer, error detection, constraint adaptation, misleading-AI resistance, calibration, certification error/risk, coverage, burden, reliability and fairness. If RBE does not improve the relevant risk–coverage–burden frontier, superiority is not demonstrated.
+The repository can establish that the formal rules are implemented consistently and that declared workbook calculations/examples are reproducible. It cannot by itself establish educational superiority. High-stakes adoption requires prospective construct review, calibration, controlled comparison, reliability and fairness analysis, and external review. Strong comparisons should report certification error/risk, coverage, burden, transfer, error detection, constraint adaptation, misleading-AI resistance, inter-rater reliability and subgroup effects.
 
-RBE does not claim invention of authentic assessment, oral defence, adaptive testing, Bayesian updating, equivalence relations or Pareto frontiers, and the repository does not claim that accreditation or regulatory bodies endorse RBE.
+If RBE does not improve the relevant risk–coverage–burden frontier against strong comparators, superiority is not demonstrated.
 
-## Author
+## Theoretical foundation
 
-**Mohammad Amir Khusru Akhtar**
+**Mohammad Amir Khusru Akhtar (2026). _Beyond Outcome Attainment: Resolution-Based Education and the Certification–Assessment Resolution Gap in the Generative-AI Era._**
 
-## Copyright and license
+DOI: `10.5281/zenodo.22797079`
 
-Copyright (C) 2026 Mohammad Amir Khusru Akhtar
+This repository implements the foundation as an educational operating and reproducibility architecture. The foundation supplies CARG, the certification-resolution necessity condition, conservative evidence reuse, the distinction between one-step probes and complete resolution-restoring policies, and resolved-attainment mathematics; the software operationalizes these objects rather than re-presenting them as separate novelty claims.
 
-Licensed under the Apache License, Version 2.0. See `LICENSE`.
+## Citation
+
+Please cite the foundation paper above when using the RBE theory. Repository/software citation metadata are provided in `CITATION.cff`.
+
+## Author and license
+
+**Mohammad Amir Khusru Akhtar**  
+Usha Martin University, Ranchi, India
+
+Copyright (C) 2026 Mohammad Amir Khusru Akhtar. Licensed under the Apache License, Version 2.0. See `LICENSE`.
