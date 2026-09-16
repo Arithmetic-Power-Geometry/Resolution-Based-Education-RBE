@@ -122,7 +122,8 @@ elif step==5:
 elif step==6:
     st.header("6 · CARG and minimum-burden discriminating evidence"); unresolved=[x for x in records() if x.state in {"AU","Deferred"}]; st.metric("Cases with unresolved certification evidence",len(unresolved))
     if unresolved: st.warning("CARG is present operationally for these cases only if the remaining ambiguity contains learner possibilities requiring different certification decisions. The software does not infer that fact from marks alone.")
-    s.probes=st.data_editor(s.probes,num_rows="dynamic",use_container_width=True,key="probes"); a,b,c,d,e=st.columns(5); min_gain=a.number_input("Min gain",0.,1.,.30,.05); min_acc=b.number_input("Min access",0.,1.,.80,.05); min_rel=c.number_input("Min reliability",0.,1.,.80,.05); max_disp=d.number_input("Max disparity",0.,1.,.20,.05); max_leak=e.number_input("Max leakage",0.,1.,.50,.05)
+    edited_probes=st.data_editor(s.probes,num_rows="dynamic",use_container_width=True,key="probes_editor"); s.probes=edited_probes
+    a,b,c,d,e=st.columns(5); min_gain=a.number_input("Min gain",0.,1.,.30,.05,key="mrrp_min_gain"); min_acc=b.number_input("Min access",0.,1.,.80,.05,key="mrrp_min_access"); min_rel=c.number_input("Min reliability",0.,1.,.80,.05,key="mrrp_min_reliability"); max_disp=d.number_input("Max disparity",0.,1.,.20,.05,key="mrrp_max_disparity"); max_leak=e.number_input("Max leakage",0.,1.,.50,.05,key="mrrp_max_leakage")
     ps=[]
     for _,x in s.probes.iterrows():
         try: ps.append(Probe(str(x.probe_id),str(x.family),float(x.cost),float(x.leakage),float(x.accessibility),float(x.reliability),float(x.group_disparity),float(x.resolution_gain)))
