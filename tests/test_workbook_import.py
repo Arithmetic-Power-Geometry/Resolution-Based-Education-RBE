@@ -3,9 +3,9 @@ import openpyxl
 from rbe.workbook import import_toc_workbook
 
 def make_fixture():
-    wb=openpyxl.Workbook(); flat=wb.active; flat.title="FLAT"; matrix=wb.create_sheet("Matrix"); co=wb.create_sheet("CO Calculation"); po=wb.create_sheet("PO Calculation")
-    flat["A2"]="Faculty"; flat["E4"]="BCA"; flat["E5"]="Computer Science"; flat["E6"]="Theory of Computation"; flat["E7"]="2026"; flat["E8"]="Instructor"
-    for i in range(1,5): flat.cell(12,6+i).value=f"Outcome {i}"
+    wb=openpyxl.Workbook(); alignment=wb.active; alignment.title="PO and CO Alignment"; matrix=wb.create_sheet("Articulation Matrix"); co=wb.create_sheet("CO Calculation"); po=wb.create_sheet("PO Calculation")
+    alignment["A2"]="Faculty"; alignment["E4"]="BCA"; alignment["E5"]="Computer Science"; alignment["E6"]="Theory of Computation"; alignment["E7"]="2026"; alignment["E8"]="Instructor"
+    for i in range(1,5): alignment.cell(12,6+i).value=f"Outcome {i}"
     for c,v in enumerate(["CT 1","CT 2","Ass","ESE"],5): co.cell(10,c).value=v
     for c,v in enumerate([15,15,10,60],5): co.cell(11,c).value=v
     alloc=[[4,0,3,9],[3,4,2,16],[8,4,2,14],[0,7,3,21]]
