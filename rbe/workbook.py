@@ -3,7 +3,7 @@ from typing import Any
 import openpyxl
 from .obe import OBEStudent, calculate_co_results, weighted_po_attainment
 
-REQUIRED_SHEETS = {"FLAT", "Matrix", "CO Calculation", "PO Calculation"}
+REQUIRED_SHEETS = {"PO and CO Alignment", "Articulation Matrix", "CO Calculation", "PO Calculation"}
 
 def _load(source: Any, data_only=False):
     if hasattr(source, "read"):
@@ -23,10 +23,10 @@ def import_toc_workbook(source: Any) -> dict:
     missing = REQUIRED_SHEETS - set(wb.sheetnames)
     if missing:
         raise ValueError("Workbook is missing required sheet(s): " + ", ".join(sorted(missing)))
-    flat, co, matrix, poc = wb["FLAT"], wb["CO Calculation"], wb["Matrix"], wb["PO Calculation"]
-    metadata = {"faculty": flat["A2"].value, "class": flat["E4"].value, "branch": flat["E5"].value, "course": flat["E6"].value, "year": flat["E7"].value, "instructor": flat["E8"].value}
+    alignment, co, matrix, poc = wb["PO and CO Alignment"], wb["CO Calculation"], wb["Articulation Matrix"], wb["PO Calculation"]
+    metadata = {"faculty": alignment["A2"].value, "class": alignment["E4"].value, "branch": alignment["E5"].value, "course": alignment["E6"].value, "year": alignment["E7"].value, "instructor": alignment["E8"].value}
     co_ids = [f"CO{i}" for i in range(1, 5)]
-    descriptions = {f"CO{i}": flat.cell(12, 6 + i).value for i in range(1, 5)}
+    descriptions = {f"CO{i}": alignment.cell(12, 6 + i).value for i in range(1, 5)}
     components, max_marks = [], {}
     for c in range(5, 9):
         name = _txt(co.cell(10, c).value)
@@ -67,7 +67,7 @@ def import_toc_workbook(source: Any) -> dict:
                 continue
             source_value, matrix_value = poc.cell(row, c).value, mapping[cid].get(po)
             if isinstance(source_value, (int, float)) and matrix_value is not None and abs(float(source_value) - float(matrix_value)) > 1e-9:
-                warnings.append(f"Source workbook PO Calculation mapping differs from Matrix for {cid}/{po}; Matrix is used as the canonical mapping.")
+                warnings.append(f"Source workbook PO Calculation mapping differs from Articulation Matrix for {cid}/{po}; Articulation Matrix is used as the canonical mapping.")
                 mismatch_found = True
                 break
         if mismatch_found:
