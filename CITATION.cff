@@ -1,5 +1,5 @@
 cff-version: 1.2.0
-message: "If you use the RBE theory or this reference implementation, please cite the RBE foundation and this software record as appropriate."
+message: "If you use Resolution-Based Education (RBE) or this reference implementation, please cite the RBE paper."
 title: "Resolution-Based Education (RBE): Reference Software and Reproducibility Implementation"
 type: software
 authors:
@@ -14,9 +14,10 @@ repository-code: "https://github.com/Arithmetic-Power-Geometry/Resolution-Based-
 url: "https://resolution-based-education.streamlit.app"
 references:
   - type: article
-    title: "Beyond Outcome Attainment: Resolution-Based Education and the Certification–Assessment Resolution Gap in the Generative-AI Era"
+    title: "Resolution-Based Education: A Decision-Relative Architecture for Capability Certification in the Generative-AI Era"
     authors:
       - family-names: Akhtar
         given-names: Mohammad Amir Khusru
     year: 2026
-    doi: "10.5281/zenodo.22797079"
+    version: "V1"
+    doi: "10.5281/zenodo.22814101"
